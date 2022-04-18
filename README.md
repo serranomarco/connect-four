@@ -15,13 +15,13 @@ Material UI
 
 ### Express.js API Server:
 API Endpoints for the Game
--Get all games
--Create a new game
--Get state of the game
--Get the list of moves played
--Post a move
--Get a move
--Quit from a game
+- Get all games
+- Create a new game
+- Get state of the game
+- Get the list of moves played
+- Post a move
+- Get a move
+- Quit from a game
 
 ### PostgreSQL DB
 Game
