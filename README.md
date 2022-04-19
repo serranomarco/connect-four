@@ -14,6 +14,7 @@ Hooks (useState, useContext, useHistory, useEffect)
 Material UI
 
 ### Express.js API Server:
+Sequelize
 API Endpoints for the Game
 - Get all games
 - Create a new game
@@ -24,9 +25,13 @@ API Endpoints for the Game
 - Quit from a game
 
 ### PostgreSQL DB
-Game
-Player
-Moves
+
+The following is the tables for the relational database with a PNG attached for the specifics of each table:
+- Games
+- Players
+- Moves
+
+![schema](assets/images/database-schema.png)
 
 ## Installation
 
