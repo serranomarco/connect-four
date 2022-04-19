@@ -9,12 +9,13 @@ This application will utilize React on the frontend to handle the actual UI, Exp
 ## Technologies
 
 ### React App:
-React Hooks
-Hooks (useState, useContext, useHistory, useEffect)
+React Hooks<br>
+Hooks (useState, useContext, useHistory, useEffect)<br>
 Material UI
 
 ### Express.js API Server:
-Sequelize
+PostgreSQL<br>
+Sequelize<br>
 API Endpoints for the Game
 - Get all games
 - Create a new game
