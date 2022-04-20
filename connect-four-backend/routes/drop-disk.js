@@ -56,7 +56,7 @@ router.post('/', asyncHandler(async (req, res, next) => {
         });
         
         res.status(200);
-        res.json({ gameId: game.id });
+        res.json({ gameId: game.id, playerOneId, playerTwoId });
     }
 
 }));
@@ -92,8 +92,8 @@ router.get('/:gameId', asyncHandler(async (req, res, next) => {
         }
     }else
     {
-        const err = new Error('Games/Moves no found');
-        err.title = 'Games/Moves no found';
+        const err = new Error('Games/Moves not found');
+        err.title = 'Games/Moves not found';
         err.status = 404;
         err.message = 'Request could not process as no game exists.';
         next(err);
@@ -133,8 +133,8 @@ router.get('/:gameId/moves', asyncHandler(async (req, res, next) => {
         });
     }else
     {
-        const err = new Error('Games/Moves no found');
-        err.title = 'Games/Moves no found';
+        const err = new Error('Games/Moves not found');
+        err.title = 'Games/Moves not found';
         err.status = 404;
         err.message = 'Request could not process as no game exists.';
         next(err);
@@ -193,7 +193,7 @@ router.post('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
 
     }else
     {
-        const err = new Error('Games/Moves no found');
+        const err = new Error('Games/Moves not found');
         err.title = 'Games/Moves no found';
         err.status = 404;
         err.message = 'Request could not process as no game exists.';
@@ -229,14 +229,14 @@ router.get('/:gameId/moves/:moveNumber', asyncHandler(async (req, res, next) => 
                 column: move.column
             });
         }else{
-            const err = new Error('Games/Moves no found');
-            err.title = 'Games/Moves no found';
+            const err = new Error('Games/Moves not found');
+            err.title = 'Games/Moves not found';
             err.status = 404;
             err.message = 'Request could not process as no move exists.';
             next(err);
         }
     }else{
-        const err = new Error('Games/Moves no found');
+        const err = new Error('Games/Moves not found');
         err.title = 'Games/Moves no found';
         err.status = 404;
         err.message = 'Request could not process as no game exists.';
@@ -245,6 +245,41 @@ router.get('/:gameId/moves/:moveNumber', asyncHandler(async (req, res, next) => 
 
 }));
 
+router.delete('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
+    const gameId = req.body.gameId;
+    const playerId = req.body.gameId;
 
+    const game = await db.Games.findByPk(gameId);
+    const player = await db.Games.findByPk(gameId);
+
+    if(game && player){
+        const existingGame = await db.Game.findOne({
+            where:{
+                gameId: gameId,
+                playerId: playerId,
+                state: 'IN_PROGRESS'
+            }
+        });
+
+        if(!existingGame){
+            const err = new Error('Game is already done');
+            err.title = 'Games is already done';
+            err.status = 410;
+            err.message = 'Could not delete game as it has already been finished'
+            next(err);
+        }else{
+            existingGame.destroy();
+            res.status = 200;
+            res.json();
+        }
+
+    }else{
+        const err = new Error('Games/Moves not found');
+        err.title = 'Games/Moves not found';
+        err.status = 404;
+        err.message = 'Request could not process as no game exists.';
+        next(err);
+    }
+}))
 
 module.exports = router;
