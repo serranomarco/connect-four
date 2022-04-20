@@ -171,7 +171,7 @@ router.post('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
             },
             attributes: ['playerId']
         });
-
+        //checks who made the last move
         if(moves[moves.length - 1].playerId === parseInt(playerId)){
             const err = new Error('Not your turn!');
             err.title = 'Not your turn';
@@ -179,7 +179,6 @@ router.post('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
             err.message = 'Request could not be made. Player cannot make two moves in a row';
             next(err);
         }else{
-
             const move = await db.Moves.create({
                 column,
                 playerId,
@@ -200,7 +199,51 @@ router.post('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
         err.message = 'Request could not process as no game exists.';
         next(err);
     }
-}))
+}));
+
+//Get a move and get data of who made it and which column
+router.get('/:gameId/moves/:moveNumber', asyncHandler(async (req, res, next) => {
+    const gameId = req.params.gameId;
+    const moveNumber = req.params.moveNumber;
+    if(!Number.isInteger(parseInt(gameId)) || !Number.isInteger(parseInt(moveNumber))){
+        const err = new Error('Malformed request');
+        err.title = 'Malformed request';
+        err.status = 400;
+        err.message = 'Could not process request game ID and move number must be an integer';
+        next(err);
+    }
+
+    const game = await db.Games.findByPk(gameId)
+    if(game){
+        const moves = await db.Moves.findAll({
+            where: { gameId: gameId }
+        });
+
+        const move = moves[moveNumber - 1];
+        const player = await db.Players.findByPk(move.playerId);
+        if(move){
+            res.status(200);
+            res.json({
+                type: "MOVE",
+                player: player.name,
+                column: move.column
+            });
+        }else{
+            const err = new Error('Games/Moves no found');
+            err.title = 'Games/Moves no found';
+            err.status = 404;
+            err.message = 'Request could not process as no move exists.';
+            next(err);
+        }
+    }else{
+        const err = new Error('Games/Moves no found');
+        err.title = 'Games/Moves no found';
+        err.status = 404;
+        err.message = 'Request could not process as no game exists.';
+        next(err);
+    }
+
+}));
 
 
 
