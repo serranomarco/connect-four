@@ -44,4 +44,5 @@ The following is the tables for the relational database with a PNG attached for 
 
 ## Tests
 
-(in progress)
+To test my routes on the backend I used jest and supertest. In order to run these tests:
+(instructions here)

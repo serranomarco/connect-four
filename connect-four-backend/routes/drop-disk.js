@@ -15,7 +15,7 @@ router.get('/', asyncHandler(async (req, res, next) => {
 //Creates a new game
 router.post('/', asyncHandler(async (req, res, next) => {
     const { players } = req.body;
-    if(players === undefined){
+    if(!players){
         const err = new Error('Malformed request');
         err.title = 'Malformed request';
         err.status = 400;
@@ -24,13 +24,26 @@ router.post('/', asyncHandler(async (req, res, next) => {
     }else{
         const [player1, player2] = players;
         
-        //creates players in database then creates a game with those players
-        const playerOne = await db.Players.create({
-            name: player1
+        //creates players in database if it doesn't exist then creates a game
+        //with those players
+        let playerOne = await db.Players.findOne({
+            where: { name: player1 }
         });
-        const playerTwo = await db.Players.create({
-            name: player2
+        let playerTwo = await db.Players.findOne({
+            where: { name: player2 }
         });
+
+        if(!playerOne){
+            playerOne = await db.Players.create({
+                name: player1
+            });
+        }
+
+        if(!playerTwo){
+            playerTwo = await db.Players.create({
+                name: player2
+            });
+        }
 
         const playerOneId = playerOne.id;
         const playerTwoId = playerTwo.id;

@@ -1,11 +1,13 @@
 //entry file for backend
 const express = require('express');
+const cors = require('cors');
 
 const db = require('./db/models');
 const dropDisk = require('./routes/drop-disk');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use('/drop_disk', dropDisk);
 
