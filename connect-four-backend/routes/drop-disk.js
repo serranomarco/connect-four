@@ -47,10 +47,12 @@ router.post('/', asyncHandler(async (req, res, next) => {
 
         const playerOneId = playerOne.id;
         const playerTwoId = playerTwo.id;
+        const state = 'IN_PROGRESS';
 
         const game = await db.Games.create({
             playerOneId,
-            playerTwoId
+            playerTwoId,
+            state
         });
         
         res.status(200);
@@ -58,5 +60,148 @@ router.post('/', asyncHandler(async (req, res, next) => {
     }
 
 }));
+
+//Gets the state of the game
+router.get('/:gameId', asyncHandler(async (req, res, next) => {
+    const gameId = req.params.gameId;
+    if(!Number.isInteger(parseInt(gameId))){
+        const err = new Error('Malformed request');
+        err.title = 'Malformed request';
+        err.status = 400;
+        err.message = 'Could not process request game ID must be an integer';
+        next(err);
+    }
+
+    const game = await db.Games.findByPk(gameId);
+    if(game){
+        const player1 = await db.Players.findByPk(game.playerOneId, { attributes: ['name'] });
+        const player2 = await db.Players.findByPk(game.playerTwoId, { attributes: ['name'] });
+
+        res.status(200);
+        if(game.state == 'DONE'){
+            res.json({
+                players: [player1.name, player2.name],
+                state: game.state,
+                winner: game.winner
+            });
+        }else{
+            res.json({
+                players: [player1.name, player2.name],
+                state: game.state
+            });
+        }
+    }else
+    {
+        const err = new Error('Games/Moves no found');
+        err.title = 'Games/Moves no found';
+        err.status = 404;
+        err.message = 'Request could not process as no game exists.';
+        next(err);
+    }
+}));
+
+//Grabs a all the moves for a particular game
+router.get('/:gameId/moves', asyncHandler(async (req, res, next) => {
+    const gameId = req.params.gameId;
+    if(!Number.isInteger(parseInt(gameId))){
+        const err = new Error('Malformed request');
+        err.title = 'Malformed request';
+        err.status = 400;
+        err.message = 'Could not process request game ID must be an integer';
+        next(err);
+    }
+
+    const game = await db.Games.findByPk(gameId);
+
+    if(game){
+        const moves = await db.Moves.findAll({
+            where: {
+                gameId: gameId
+            },
+            attributes: ['playerId', 'column']
+        });
+        res.status(200);
+        res.json({
+            moves: moves.map(async (move) => {
+                const player = await db.Players.findByPk(move.playerId);
+                return {
+                    type: 'MOVE',
+                    player: player.name,
+                    column: move.column
+                }
+            }),
+        });
+    }else
+    {
+        const err = new Error('Games/Moves no found');
+        err.title = 'Games/Moves no found';
+        err.status = 404;
+        err.message = 'Request could not process as no game exists.';
+        next(err);
+    }
+}));
+
+//posts a move to a certain game and checks if the player can make that move
+router.post('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
+    const gameId = req.params.gameId;
+    const playerId = req.params.playerId;
+    if(!Number.isInteger(parseInt(gameId)) || !Number.isInteger(parseInt(playerId))){
+        const err = new Error('Malformed request');
+        err.title = 'Malformed request';
+        err.status = 400;
+        err.message = 'Could not process request game ID and player ID must be an integer';
+        next(err);
+    }
+
+    const { column } = req.body;
+    if(!column){
+        const err = new Error('Malformed request');
+        err.title = 'Malformed request';
+        err.status = 400;
+        err.message = 'Request must be in the correct format.';
+        next(err);
+    }
+
+    const game = await db.Games.findByPk(gameId);
+    if(game){
+
+        const moves = await db.Moves.findAll({
+            where: {
+                gameId: gameId
+            },
+            attributes: ['playerId']
+        });
+
+        if(moves[moves.length - 1].playerId === parseInt(playerId)){
+            const err = new Error('Not your turn!');
+            err.title = 'Not your turn';
+            err.status = 409;
+            err.message = 'Request could not be made. Player cannot make two moves in a row';
+            next(err);
+        }else{
+
+            const move = await db.Moves.create({
+                column,
+                playerId,
+                gameId
+            });
+    
+            res.status(200);
+            res.json({
+                move: `${gameId}/moves/${moves.length + 1}`
+            });
+        }
+
+    }else
+    {
+        const err = new Error('Games/Moves no found');
+        err.title = 'Games/Moves no found';
+        err.status = 404;
+        err.message = 'Request could not process as no game exists.';
+        next(err);
+    }
+}))
+
+
 
 module.exports = router;

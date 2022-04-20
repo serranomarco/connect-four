@@ -18,6 +18,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 'Players' }
       },
+      state: {
+        default: "IN_PROGRESS",
+        allowNull: false,
+        type: Sequelize.STRING(50)
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
