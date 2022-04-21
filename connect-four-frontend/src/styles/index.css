@@ -2,12 +2,24 @@
 *{
     font-family: sans-serif;
 }
+
+h1, h2{
+    text-align: center;
+}
+
 .navbar{
     position: absolute;
     top: 0px;
     width: 100%;
     height: 50px;
-    background-color: navy;
+    background-color: #1976d2;
+}
+
+.content-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .navbar-heading{
@@ -26,6 +38,28 @@
     margin-top: 50px;
 }
 
+.player-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.player-form--hidden{
+    display: none;
+}
+
+.player-profile--hidden{
+    display: none;
+}
+
+.profile-wrapper{
+    margin-top: 20px;
+    font-size: 25px;
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+}
+
 .new-game--hidden{
     display: none !important;
 }
@@ -39,8 +73,9 @@
     grid-template: repeat(4, 1fr) / repeat(4, 1fr);
     height: 400px;
     width: 400px;
-    background-color: aqua;
+    background-color: #1976d2;
     padding: 5px;
+    margin: 20px
 }
 
 .board-piece{
@@ -53,10 +88,14 @@
     margin: 5px;
     background-color: red;
     border-radius: 50%;
+    width: 90px;
+    height: 90px;
 }
 
 .yellow-piece{
     margin: 5px;
     background-color: yellow;
     border-radius: 50%;
+    width: 90px;
+    height: 90px;
 }

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Games.belongsTo(models.Players, { foreignKey: 'playerOneId'});
       Games.belongsTo(models.Players, { foreignKey: 'playerTwoId'});
-      Games.hasMany(models.Moves, { foreignKey: 'gameId' });
+      Games.hasMany(models.Moves, { foreignKey: 'gameId', onDelete: 'cascade' });
     }
   }
   Games.init({

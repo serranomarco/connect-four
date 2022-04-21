@@ -20,6 +20,7 @@ module.exports = {
       gameId: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        onDelete: 'cascade',
         references: { model: 'Games' }
       },
       createdAt: {

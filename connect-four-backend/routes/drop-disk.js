@@ -56,7 +56,11 @@ router.post('/', asyncHandler(async (req, res, next) => {
         });
         
         res.status(200);
-        res.json({ gameId: game.id, playerOneId, playerTwoId });
+        res.json({ 
+            gameId: game.id,
+            player1: game.playerOneId, 
+            player2: game.playerTwoId
+        });
     }
 
 }));
@@ -172,7 +176,8 @@ router.post('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
             attributes: ['playerId']
         });
         //checks who made the last move
-        if(moves[moves.length - 1].playerId === parseInt(playerId)){
+        const lastMove = moves[moves.length - 1];
+        if(lastMove && lastMove.playerId === parseInt(playerId)){
             const err = new Error('Not your turn!');
             err.title = 'Not your turn';
             err.status = 409;
@@ -246,17 +251,18 @@ router.get('/:gameId/moves/:moveNumber', asyncHandler(async (req, res, next) => 
 }));
 
 router.delete('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
-    const gameId = req.body.gameId;
-    const playerId = req.body.gameId;
+    const gameId = req.params.gameId;
+    const playerId = req.params.playerId;
 
     const game = await db.Games.findByPk(gameId);
-    const player = await db.Games.findByPk(gameId);
+    const player = await db.Players.findByPk(playerId);
+
+    console.log(gameId, playerId);
 
     if(game && player){
-        const existingGame = await db.Game.findOne({
+        const existingGame = await db.Games.findOne({
             where:{
-                gameId: gameId,
-                playerId: playerId,
+                id: gameId,
                 state: 'IN_PROGRESS'
             }
         });
@@ -268,7 +274,7 @@ router.delete('/:gameId/:playerId', asyncHandler(async (req, res, next) => {
             err.message = 'Could not delete game as it has already been finished'
             next(err);
         }else{
-            existingGame.destroy();
+            await existingGame.destroy();
             res.status = 200;
             res.json();
         }

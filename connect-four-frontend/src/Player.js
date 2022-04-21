@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { TextField, Button } from '@mui/material'
+import { TextField } from '@mui/material'
 
 import { ConnectFourContext } from './ConnectFourContext';
 
@@ -21,7 +21,6 @@ const Player = ({num}) => {
                 <TextField onChange={(e) => {
                     updatePlayer(num, e);
                 }} style={{ marginBottom:'10px'}} id={`player-${num}`} label={`Player ${num}`} variant='standard' />
-                <Button className='quit-game quit-game--hidden' variant="contained">Quit Game</Button>
             </div>
         </>
     )
