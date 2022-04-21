@@ -10,7 +10,7 @@ const Profile = ({num}) => {
     const deleteGame = async (num) => {
         const gameId = localStorage.getItem('game-id')
         const playerId = num === 1 ? localStorage.getItem('player-one-id') : localStorage.getItem('player-two-id');
-        const response = await fetch(`${apiUrl}/drop_disk/${gameId}/${playerId}`, {
+        await fetch(`${apiUrl}/drop_disk/${gameId}/${playerId}`, {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json'

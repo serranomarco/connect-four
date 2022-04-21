@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { apiUrl } from './config';
 
 import { ConnectFourContext } from './ConnectFourContext';
@@ -15,11 +15,8 @@ const Board = () => {
         const gameId = localStorage.getItem('game-id');
         let playerId;
 
-        console.log(currentTurn);
-
         if(currentTurn === 1){
             playerId = localStorage.getItem('player-one-id');
-            console.log(playerId);
         }else if(currentTurn === 2){
             playerId = localStorage.getItem('player-two-id');
         }
@@ -43,7 +40,7 @@ const Board = () => {
             localStorage.setItem('current-turn', 1);
         }
 
-        const response = await fetch(`${apiUrl}/drop_disk/${gameId}/${playerId}`, {
+        await fetch(`${apiUrl}/drop_disk/${gameId}/${playerId}`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,9 +71,62 @@ const Board = () => {
         piece.classList.add('board-piece');
     }
 
+    const checkWinnerVertical = () => {
+        for(let i = 0; i < board.length; i++){
+            for(let j = 0; j < board[i].length - 3; j++){
+                const column = board[i];
+                if (column[j] !== '' && column[j] === column[j + 1] && column[j] === column[j + 2] && column[j] === column[j + 3]) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    const checkWinnerHorizontal = () => {
+        for(let i = 0; i < board.length; i++){
+            if (board[0][i] !== '' && board[0][i] === board[1][i] && board[0][i] === board[2][i] && board[0][i] === board[3][i]) {
+                return true;
+            }
+        }
+    }
+
+    const checkWinnerDiagonal = () => {
+        for (let i = 0; i < board.length - 3; i++) {
+            for (let j = board[i].length - 1; j >= 0; j--) {
+                if (board[i][j] !== '' &&
+                    board[i][j] === board[i + 1][j - 1] &&
+                    board[i][j] === board[i + 2][j - 2] &&
+                    board[i][j] === board[i + 3][j - 3]) {
+                    return true;
+                }
+            }
+        }
+        for (let i = board.length - 1; i >= 3; i--) {
+            for (let j = board[i].length - 1; j >= 0; j--) {
+                if (board[i][j] !== '' &&
+                    board[i][j] === board[i - 1][j - 1] &&
+                    board[i][j] === board[i - 2][j - 2] &&
+                    board[i][j] === board[i - 3][j - 3]) {
+                    return true;
+                }
+            }
+        }
+    }
+    const checkWin = () => {
+        if (checkWinnerVertical()) {
+            console.log(true);
+        }else if (checkWinnerHorizontal()) {
+            console.log(true);
+        }else if (checkWinnerDiagonal()) {
+            console.log(true);
+        }
+    }
+
+    useEffect(checkWin, [board, setBoard, checkWin]);
+
     if(board){
         return(
-            <div className='board'>
+            <div className='board board--hidden'>
             {board.map((ele, i) => {
                 return board[i].map((ele, j) => {
                     if(i === 0){
