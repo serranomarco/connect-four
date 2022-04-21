@@ -6,6 +6,13 @@ Full-stack application that will allows 2 players to run a game of Connect 4 on 
 
 This application will utilize React on the frontend to handle the actual UI, Express.js on the backend to handle the game logic as well as Rest APIs to track make queries to a postgreSQL database. Users should be able both start a new game as well as quit their current game. We will be using local storage to track the gameId which we will use to grab the current state of that specific game.
 
+## Table of Contents
+
+- [Technologies](#technologies)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Tests](#tests)
+
 ## Technologies
 
 ### React App:
@@ -41,7 +48,29 @@ The following is the tables for the relational database with a PNG attached for 
 
 ## Installation
 
-(in progress)
+- Clone the project
+- Configure database
+- Configure backend
+
+    1. ```bash
+       cd connect-four-backend
+       npm install                      #install packages
+       ```
+
+    2. Create .env file using your database credentials (example.env included)
+
+    3. ```bash
+       npx dotenv sequelize db:migrate  #create tables in your database
+       npm start                        #start api server
+       ```
+
+- Configure frontend
+
+    1. ```bash
+       cd connect-four-backend
+       npm install                      #install packages
+       npm start                        #start the application
+       ```
 
 ## Usage
 
