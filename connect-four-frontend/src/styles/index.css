@@ -37,11 +37,29 @@ h1, h2{
     margin-top: 100px;
 }
 
+.turn-wrapper{
+    height: 136.5px;
+    padding: 20px 5px 0 5px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: space-between;
+    font-size: 20px;
+}
+
+.player-turn{
+    margin-bottom: 10px;
+}
+.player-turn--hidden{
+    display: none;
+}
+
 .player-form{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
+
 
 .player-form--hidden{
     display: none;
@@ -64,6 +82,10 @@ h1, h2{
 }
 
 .new-game--hidden{
+    display: none !important;
+}
+
+.next-game--hidden{
     display: none !important;
 }
 

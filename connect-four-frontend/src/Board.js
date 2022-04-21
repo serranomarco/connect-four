@@ -4,7 +4,7 @@ import { apiUrl } from './config';
 import { ConnectFourContext } from './ConnectFourContext';
 
 const Board = () => {
-    const { board, setBoard, currentTurn, setCurrentTurn } = useContext(ConnectFourContext);
+    const { board, setBoard, currentTurn, setCurrentTurn, setWinner } = useContext(ConnectFourContext);
     //creates our board with empty values only if there is no board in state
 
     const movePiece = async (e) => { 
@@ -76,6 +76,7 @@ const Board = () => {
             for(let j = 0; j < board[i].length - 3; j++){
                 const column = board[i];
                 if (column[j] !== '' && column[j] === column[j + 1] && column[j] === column[j + 2] && column[j] === column[j + 3]) {
+                    setWinner(column[j]);
                     return true;
                 }
             }
@@ -85,6 +86,7 @@ const Board = () => {
     const checkWinnerHorizontal = () => {
         for(let i = 0; i < board.length; i++){
             if (board[0][i] !== '' && board[0][i] === board[1][i] && board[0][i] === board[2][i] && board[0][i] === board[3][i]) {
+                setWinner(board[0][i]);
                 return true;
             }
         }
@@ -97,6 +99,7 @@ const Board = () => {
                     board[i][j] === board[i + 1][j - 1] &&
                     board[i][j] === board[i + 2][j - 2] &&
                     board[i][j] === board[i + 3][j - 3]) {
+                    setWinner(board[i][j]);
                     return true;
                 }
             }
@@ -107,18 +110,36 @@ const Board = () => {
                     board[i][j] === board[i - 1][j - 1] &&
                     board[i][j] === board[i - 2][j - 2] &&
                     board[i][j] === board[i - 3][j - 3]) {
+                    setWinner(board[i][j]);
                     return true;
                 }
             }
         }
     }
+
+    const checkBoardFull = () => {
+        const boardFull = board.every((column) => {
+            return column.every((space) => {
+                return space !== '';
+            })
+        })
+        if(boardFull){
+            setWinner(3);
+        }
+        return boardFull;
+    }
+
     const checkWin = () => {
-        if (checkWinnerVertical()) {
-            console.log(true);
-        }else if (checkWinnerHorizontal()) {
-            console.log(true);
-        }else if (checkWinnerDiagonal()) {
-            console.log(true);
+        if (checkWinnerVertical() || checkWinnerHorizontal() || checkWinnerDiagonal() || checkBoardFull()) {
+            const board = document.querySelector('.board');
+            const nextGameButton = document.querySelector('.next-game');
+            const quitButtons = document.querySelectorAll('.quit-game');
+            board.classList.add('board--hidden')
+            nextGameButton.classList.remove('next-game--hidden');
+            quitButtons.forEach((ele) => {
+                ele.classList.add('quit-game--hidden');
+            });
+            setCurrentTurn(1);
         }
     }
 

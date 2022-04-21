@@ -29,12 +29,17 @@ function App() {
     const [board, setBoard] = useState(localStorage.getItem('board')? JSON.parse(localStorage.getItem('board')) : createBoard());
     const [currentTurn, setCurrentTurn] = useState(localStorage.getItem('current-turn') ? parseInt(localStorage.getItem('current-turn')) : 1);
     const [isHidden, setIsHidden] = useState(true);
+    const [winner, setWinner] = useState(false);
 
     const showForm = () => {
         const form = document.querySelector('.player-form');
         const board = document.querySelector('.board');
+        const turn = document.querySelector('.player-turn');
+
         form.classList.remove('player-form--hidden');
         board.classList.add('board--hidden');
+        turn.classList.add('player-turn--hidden');
+
         const profile = document.querySelectorAll('.player-profile');
         const quitButton = document.querySelectorAll('.quit-game');
 
@@ -49,8 +54,12 @@ function App() {
     const hideForm = () => {
         const form = document.querySelector('.player-form');
         const board = document.querySelector('.board');
+        const turn = document.querySelector('.player-turn');
+
         form.classList.add('player-form--hidden');
         board.classList.remove('board--hidden');
+        turn.classList.remove('player-turn--hidden');
+
         const profile = document.querySelectorAll('.player-profile');
         const quitButton = document.querySelectorAll('.quit-game');
 
@@ -77,6 +86,8 @@ function App() {
         setCurrentTurn,
         isHidden,
         setIsHidden,
+        winner,
+        setWinner,
         showForm,
         createBoard
     }
@@ -103,8 +114,10 @@ function App() {
             localStorage.setItem('player-one-name', playerOneName);
             localStorage.setItem('player-two-name', playerTwoName);
             localStorage.setItem('player-one-id', json.player1);
-            localStorage.setItem('player-two-id', json.player2)
+            localStorage.setItem('player-two-id', json.player2);
+            localStorage.setItem('current-turn', 1);
         }
+
     }
 
     
@@ -131,7 +144,16 @@ function App() {
                     </form>
                     <div className='profile-wrapper'>
                         <Profile num={1} />
-                        <Turn />
+                        <div className='turn-wrapper'>
+                            <Turn />
+                            <Button onClick={(e) => {
+                                setBoard(createBoard());
+                                handleNewGame(e);
+                                hideForm();
+                                e.target.classList.add('next-game--hidden');
+                                setWinner(false);
+                            }} className='next-game next-game--hidden' variant='contained'>Next Game</Button>
+                        </div>
                         <Profile num={2} />
                     </div>
                 </div>
