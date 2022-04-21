@@ -17,7 +17,7 @@ This application will utilize React on the frontend to handle the actual UI, Exp
 
 ### React App:
 React Hooks<br>
-Hooks (useState, useContext, useHistory, useEffect)<br>
+Hooks (useState, useContext, useEffect)<br>
 Material UI
 
 ### Express.js API Server:
