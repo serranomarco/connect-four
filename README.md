@@ -17,7 +17,7 @@ This application will utilize React on the frontend to handle the actual UI, Exp
 
 ### React App:
 React Hooks<br>
-Hooks (useState, useContext, useHistory, useEffect)<br>
+Hooks (useState, useContext, useEffect)<br>
 Material UI
 
 ### Express.js API Server:
@@ -67,7 +67,7 @@ The following is the tables for the relational database with a PNG attached for 
 - Configure frontend
 
     1. ```bash
-       cd connect-four-backend
+       cd connect-four-frontend
        npm install                      #install packages
        npm start                        #start the application
        ```
