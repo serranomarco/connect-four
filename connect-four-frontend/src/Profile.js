@@ -5,7 +5,7 @@ import { ConnectFourContext } from './ConnectFourContext';
 import { apiUrl } from './config';
 
 const Profile = ({num}) => {
-    const { setBoard, playerOneName, playerTwoName, setIsHidden, showForm, createBoard } = useContext(ConnectFourContext);
+    const { setBoard, playerOneName, playerTwoName, setIsHidden, setCurrentTurn, showForm, createBoard } = useContext(ConnectFourContext);
 
     const deleteGame = async (num) => {
         const gameId = localStorage.getItem('game-id')
@@ -29,6 +29,7 @@ const Profile = ({num}) => {
                         setIsHidden(true)
                         deleteGame(num);
                         showForm();
+                        setCurrentTurn(1);
                         localStorage.removeItem('player-one-name')
                         }} className='quit-game quit-game--hidden' variant="contained">Quit Game</Button>
                 </div> 
@@ -42,6 +43,7 @@ const Profile = ({num}) => {
                         setIsHidden(true)
                         deleteGame(num);
                         showForm();
+                        setCurrentTurn(1);
                         localStorage.removeItem('player-two-name')
                         }} className='quit-game quit-game--hidden' variant="contained">Quit Game</Button>
                 </div> 
